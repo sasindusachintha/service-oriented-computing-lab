@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <title>Add Employee</title>
+     <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" >
+</head>
+
+<body>
+
+    <h2>Add Employee</h2>
+
+    <input id = "name" class =  "form-control mb-2" placeholder="Name">
+    <input id = "email" class =  "form-control mb-2" placeholder="Email">
+    <input id = "phone" class =  "form-control mb-2" placeholder="Phone">
+    <input id = "salary" class =  "form-control mb-2" placeholder="Salary">
+
+    <button class = "btn btn-success" onclick="saveEmployee()">Save</button>
+    <script>
+
+        const API = "http://localhost:5105/api/Employees";
+
+        function saveEmployee(){
+
+            const nameValue = document.getElementById("name").value;
+            const emailValue = document.getElementById("email").value;
+            const phoneValue = document.getElementById("phone").value;
+            const salaryValue = document.getElementById("salary").value;
+       
+       if(!nameValue || !emailValue) {
+        alert("Name and Email are required!");
+        return;
+       }
+
+       const employee = {
+        name: nameValue,
+        email: emailValue,
+        phone: phoneValue,
+        salary: Number(salaryValue)
+
+        
+       };
+       
+        }
+    </script>
+
+</body>
+</html>

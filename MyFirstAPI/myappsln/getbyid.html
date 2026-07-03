@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+   <title> Get Employee By ID </title>
+
+    <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" >
+</head>
+
+<body class = "container mt-5">
+
+    <h2> Search Employee</h2>
+    <input id = "id" class = "form-control mb-3" placeholder="Employee ID">
+
+    <button class = "btn btn-primary" onclick="searchEmployee()">
+        Search
+    </button>
+
+    <div id= "result" class = "mt-4"></div>
+    <script>
+      const API = "http://localhost:5105/api/Employees";
+
+      function searchEmployee(){
+        fetch(API + "/" + id.value)
+
+        .then(res => res.json())
+        .then(emp => {
+            result.innerHTML = `
+            <h4>${emp.name}</h4>
+            <p>Email : ${emp.email}</p>
+            <p>Phone : ${emp.phone}</p>
+            <p>Salary : ${emp.salary}</p>
+        
+        `
+            })
+
+            .catch(() => {
+                result.innerHTML = "Employee Not Found";
+            });
+      }
+      
+    </script>
+</body>
+</html>
