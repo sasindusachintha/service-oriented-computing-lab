@@ -2,22 +2,20 @@
 <html>
 
 <head>
-    <title> Get All Employees</title>
-
-    <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <title>Get All Employees</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="container mt-5">
-    <h2> All Employees</h2>
-    
-    <button class = "btn btn-primary mb-3" onclick="loadEmployees()">
+
+    <h2>All Employees</h2>
+
+    <button class="btn btn-primary mb-3" onclick="loadEmployees()">
         Load Employees
     </button>
 
-    <table class = "table table-bordered" >
-
+    <table class="table table-bordered">
         <thead>
-
             <tr>
                 <th>Name</th>
                 <th>Email</th>
@@ -26,15 +24,21 @@
             </tr>
         </thead>
 
-        <tbody id = "employee"></tbody> 
+        <tbody id="employee"></tbody>
     </table>
 
 <script>
-    const API = "http://localhost:5105/api/Employees";
+    // ✅ Correct API URL
+    const API = "https://localhost:7084/api/Employee";
 
     function loadEmployees() {
-        fetch(API + "/allemp")
-            .then(res => res.json())
+        fetch(API) // ✅ GET all employees
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("HTTP error " + res.status);
+                }
+                return res.json();
+            })
             .then(data => {
                 let rows = "";
 
@@ -51,10 +55,12 @@
 
                 document.getElementById("employee").innerHTML = rows;
             })
-            .catch(err => console.error("Error:", err));
+            .catch(err => {
+                console.error("Error:", err);
+                alert("Failed to load employees");
+            });
     }
 </script>
 
 </body>
-
 </html>

@@ -1,47 +1,96 @@
 <!DOCTYPE html>
-<html >
+<html>
 <head>
     <title>Add Employee</title>
-     <link href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body class="container mt-5">
 
     <h2>Add Employee</h2>
 
-    <input id = "name" class =  "form-control mb-2" placeholder="Name">
-    <input id = "email" class =  "form-control mb-2" placeholder="Email">
-    <input id = "phone" class =  "form-control mb-2" placeholder="Phone">
-    <input id = "salary" class =  "form-control mb-2" placeholder="Salary">
+    <!-- Name -->
+    <input id="firstName" class="form-control mb-2" placeholder="First Name">
+    <input id="lastName" class="form-control mb-2" placeholder="Last Name">
 
-    <button class = "btn btn-success" onclick="saveEmployee()">Save</button>
-    <script>
+    <!-- Contact -->
+    <input id="email" class="form-control mb-2" placeholder="Email">
+    <input id="phone" class="form-control mb-2" placeholder="Phone">
 
-        const API = "http://localhost:5105/api/Employees";
+    <!-- Job Info -->
+    <input id="position" class="form-control mb-2" placeholder="Position">
+    <input id="department" class="form-control mb-2" placeholder="Department">
 
-        function saveEmployee(){
+    <!-- Salary -->
+    <input id="salary" class="form-control mb-2" placeholder="Salary">
 
-            const nameValue = document.getElementById("name").value;
-            const emailValue = document.getElementById("email").value;
-            const phoneValue = document.getElementById("phone").value;
-            const salaryValue = document.getElementById("salary").value;
-       
-       if(!nameValue || !emailValue) {
-        alert("Name and Email are required!");
-        return;
-       }
+    <button class="btn btn-success" onclick="saveEmployee()">Save</button>
 
-       const employee = {
-        name: nameValue,
-        email: emailValue,
-        phone: phoneValue,
-        salary: Number(salaryValue)
+<script>
+    const API = "https://localhost:7084/api/Employee";
 
-        
-       };
-       
+    function saveEmployee() {
+
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const position = document.getElementById("position").value.trim();
+        const department = document.getElementById("department").value.trim();
+        const salaryValue = document.getElementById("salary").value;
+
+        // ✅ Validation
+        if (!firstName || !email || !position || !department) {
+            alert("First Name, Email, Position and Department are required!");
+            return;
         }
-    </script>
+
+        const employee = {
+            firstName: firstName,
+            lastName: lastName || "",
+            email: email,
+            phoneNumber: phone || "",
+            position: position,
+            department: department,
+            salary: salaryValue ? Number(salaryValue) : 0
+        };
+
+        console.log("Sending:", employee);
+
+        fetch(API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(employee)
+        })
+        .then(async res => {
+            const text = await res.text();
+
+            if (!res.ok) {
+                throw new Error(text);
+            }
+
+            return text;
+        })
+        .then(() => {
+            alert("✅ Employee added successfully!");
+
+            // Clear form
+            document.getElementById("firstName").value = "";
+            document.getElementById("lastName").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("position").value = "";
+            document.getElementById("department").value = "";
+            document.getElementById("salary").value = "";
+        })
+        .catch(err => {
+            console.error("FULL ERROR:", err);
+            alert("❌ Error: " + err.message);
+        });
+    }
+</script>
 
 </body>
 </html>
