@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Employee</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+
+<h2>Update Employee</h2>
+
+<div class="mb-3">
+    <input type="number" id="employeeId" class="form-control" placeholder="Enter Employee ID">
+    <button class="btn btn-primary mt-2" onclick="loadEmployee()">Load Employee</button>
+</div>
+
+<input id="firstName" class="form-control mb-2" placeholder="First Name">
+<input id="lastName" class="form-control mb-2" placeholder="Last Name">
+<input id="email" class="form-control mb-2" placeholder="Email">
+<input id="phone" class="form-control mb-2" placeholder="Phone Number">
+<input id="position" class="form-control mb-2" placeholder="Position">
+<input id="department" class="form-control mb-2" placeholder="Department">
+<input id="salary" type="number" class="form-control mb-2" placeholder="Salary">
+
+<button class="btn btn-success" onclick="updateEmployee()">
+    Update Employee
+</button>
+
+<script>
+
+const API = "http://localhost:5105/api/Employees";
+
+function loadEmployee() {
+
+    const id = document.getElementById("employeeId").value;
+
+    if (!id) {
+        alert("Enter Employee ID");
+        return;
+    }
+
+    fetch(API + "/" + id)
+    .then(async res => {
+
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+
+        return res.json();
+
+    })
+    .then(emp => {
+
+        document.getElementById("firstName").value = emp.firstName;
+        document.getElementById("lastName").value = emp.lastName;
+        document.getElementById("email").value = emp.email;
+        document.getElementById("phone").value = emp.phoneNumber;
+        document.getElementById("position").value = emp.position;
+        document.getElementById("department").value = emp.department;
+        document.getElementById("salary").value = emp.salary;
+
+    })
+    .catch(err => {
+        alert(err.message);
+    });
+
+}
+
+function updateEmployee() {
+
+    const id = document.getElementById("employeeId").value;
+
+    const employee = {
+
+        employeeId: Number(id),
+        firstName: document.getElementById("firstName").value,
+        lastName: document.getElementById("lastName").value,
+        email: document.getElementById("email").value,
+        phoneNumber: document.getElementById("phone").value,
+        position: document.getElementById("position").value,
+        department: document.getElementById("department").value,
+        salary: Number(document.getElementById("salary").value)
+
+    };
+
+    fetch(API + "/" + id, {
+
+        method: "PUT",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify(employee)
+
+    })
+    .then(async res => {
+
+        const text = await res.text();
+
+        if (!res.ok) {
+            throw new Error(text);
+        }
+
+        alert("Employee updated successfully.");
+
+    })
+    .catch(err => {
+
+        console.error(err);
+        alert(err.message);
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
